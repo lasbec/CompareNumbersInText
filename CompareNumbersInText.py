@@ -35,7 +35,7 @@ class StringSlice:
     def __repr__(self):
         return f"[{self.startIndex}:{self.stopIndex}]'{self.value}'"
 
-    def hintString(self):
+    def __str__(self):
         return self.surroundingSlice().valueWithOpenEndsMarked()
 
     def valueWithOpenEndsMarked(self):
@@ -59,14 +59,16 @@ class SlicesComparison:
         self.slicesLeft = slicesLeft
         self.slicesRight = slicesRight
         self.initMisses()
+        self.initDifferences()
 
         
-    def differences(self):
+    def initDifferences(self):
         result = []
         for leftDigits, rightDigits in zip_longest(self.slicesLeft, self.slicesRight):
             if(leftDigits != rightDigits):
                 result += [(leftDigits, rightDigits)]
-        return result
+        self.differences = result
+        self.differencesFound = len(self.differences) > 0
     
     def initMisses(self):
         leftSet = set(self.slicesLeft)
@@ -77,11 +79,20 @@ class SlicesComparison:
 
 
 
+
     def __repr__(self):
-        result = "Left misses following elements from right:\n"
+        if(not self.differencesFound):
+            return "No difference found"
+        result = ""
+        
+        (firstDiffLeft, firstDiffRight) = self.differences[0]
+
+        result += "First difference:\n" + str(firstDiffLeft) + "\n" + str(firstDiffRight) + "\n"
+
+        result += "\nLeft misses following elements from right:\n" if len(self.leftMisses) > 0 else ""
         for lm in self.leftMisses:
             result += str(lm) + "\n"
-        result += "Right misses following elements from left:\n"
+        result += "\nRight misses following elements from left:\n" if (len(self.rightMisses)) > 0 else ""
         for rm in self.rightMisses:
             result += str(rm) + "\n"
         return result
@@ -118,9 +129,9 @@ def main():
         
         comp = SlicesComparison(numbers1, numbers2)
 
-        if(len(comp.differences()) > 0):
+        if(comp.differencesFound):
             counter += 1
-            print(comp)
+            print("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
 
         # if numbers1 != numbers2:
         #     counter += 1
