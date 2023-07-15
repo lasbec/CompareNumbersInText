@@ -56,7 +56,7 @@ class DigitsComparison:
     def differences(self):
         result = []
         for leftDigits, rightDigits in zip(self.sliceLeft, self.sliceRight):
-            if(leftDigist != rightDigits):
+            if(leftDigits != rightDigits):
                 result += [(leftDigits, rightDigits)]
         return result
 
@@ -98,11 +98,9 @@ def main():
         
         DigitsComparison
 
-        firstNumber = _numbers[0]
-        if any(n != firstNumber for n in _numbers):
-            fstEntry = pair[0]
+        if numbers1 != numbers2:
             counter += 1
-            print("\nEntry unequal in line", i + 2, "\nRead numbers\n", _numbers[0], "\n", _numbers[1],"\n", firstDiff(_numbers[0], _numbers[1])),
+            print("\nEntry unequal in line", i + 2, "\nRead numbers\n", _numbers1, "\n", _numbers2,"\n", firstDiff(_numbers1, _numbers2)),
 
     print("Found ", counter, " inconsistencys in total")
 
