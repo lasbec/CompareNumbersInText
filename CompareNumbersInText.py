@@ -1,20 +1,6 @@
 import pandas as pd
 from itertools import zip_longest
 
-    
-
-def filterDigits(str):
-    return "".join([c for c in str if c.isdigit()])
-
-def firstDiff(str0, str1):
-    result = ""
-    for c0, c1 in zip(str0, str1):
-        if(c0!=c1):
-            return result + " (common prefix)" + "\n  " + c0 + " first difference\n  " + c1 + " first difference"
-        result += c0
-
-    return None
-
 
 class StringSlice:
     def __init__(self, parentString, startIndex, stopIndex):
@@ -121,9 +107,6 @@ def main():
     col1 = df["DE"].tolist()
     col2 = df["FR"].tolist()
     for i,(cell1, cell2) in enumerate(zip(col1, col2)):
-        _numbers1 = filterDigits(cell1)
-        _numbers2 = filterDigits(cell2)
-
         numbers1 = parseDigitSlices(cell1)
         numbers2 = parseDigitSlices(cell2)
         
@@ -132,11 +115,6 @@ def main():
         if(comp.differencesFound):
             counter += 1
             print("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
-
-        # if numbers1 != numbers2:
-        #     counter += 1
-        #     print("\nEntry unequal in line", i + 2, "\nRead numbers\n", _numbers1, "\n", _numbers2,"\n", firstDiff(_numbers1, _numbers2)),
-
     print("Found ", counter, " inconsistencys in total")
 
 main() 
