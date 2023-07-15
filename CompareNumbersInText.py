@@ -1,4 +1,5 @@
 import pandas as pd
+from itertools import zip_longest
 
     
 
@@ -24,7 +25,12 @@ class StringSlice:
         self.value = parentString[startIndex:stopIndex]
 
     def __eq__(self, other):
+        if(other == None):
+            return False
         return self.value == other.value
+    
+    def __hash__(self):
+        return hash(self.value)
 
     def __repr__(self):
         return f"[{self.startIndex}:{self.stopIndex}]'{self.value}'"
@@ -48,23 +54,37 @@ class StringSlice:
 
         return StringSlice(self.parentString, start, stop)
 
-class DigitsComparison:
+class SlicesComparison:
     def __init__(self, slicesLeft, slicesRight):
         self.slicesLeft = slicesLeft
         self.slicesRight = slicesRight
+        self.initMisses()
+
         
     def differences(self):
         result = []
-        for leftDigits, rightDigits in zip(self.sliceLeft, self.sliceRight):
+        for leftDigits, rightDigits in zip_longest(self.slicesLeft, self.slicesRight):
             if(leftDigits != rightDigits):
                 result += [(leftDigits, rightDigits)]
         return result
+    
+    def initMisses(self):
+        leftSet = set(self.slicesLeft)
+        rightSet = set(self.slicesRight)
+
+        self.leftMisses = rightSet.difference(leftSet)
+        self.rightMisses = leftSet.difference(rightSet)
+
 
 
     def __repr__(self):
-        return self.differences().__repr__()
-
-        
+        result = "Left misses following elements from right:\n"
+        for lm in self.leftMisses:
+            result += str(lm) + "\n"
+        result += "Right misses following elements from left:\n"
+        for rm in self.rightMisses:
+            result += str(rm) + "\n"
+        return result
 
 
 def parseDigitSlices(string):
@@ -96,12 +116,16 @@ def main():
         numbers1 = parseDigitSlices(cell1)
         numbers2 = parseDigitSlices(cell2)
         
-        DigitsComparison
+        comp = SlicesComparison(numbers1, numbers2)
 
-        if numbers1 != numbers2:
+        if(len(comp.differences()) > 0):
             counter += 1
-            print("\nEntry unequal in line", i + 2, "\nRead numbers\n", _numbers1, "\n", _numbers2,"\n", firstDiff(_numbers1, _numbers2)),
+            print(comp)
+
+        # if numbers1 != numbers2:
+        #     counter += 1
+        #     print("\nEntry unequal in line", i + 2, "\nRead numbers\n", _numbers1, "\n", _numbers2,"\n", firstDiff(_numbers1, _numbers2)),
 
     print("Found ", counter, " inconsistencys in total")
 
-main()
+main() 
