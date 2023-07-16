@@ -1,2 +1,3 @@
-/Texte.xlsx
-/__Texte.xlsx
+/build
+/LocalData
+/CompareNumbersInText.spec
