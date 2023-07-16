@@ -1,5 +1,6 @@
 import pandas as pd
 from itertools import zip_longest
+from pathlib import Path
 
 
 class StringSlice:
@@ -105,14 +106,32 @@ def parseDigitSlices(string):
     return result
 
 
+class ResultText:
+    def __init__(self):
+        self.text = ""
+
+    def append(self, *text):
+        print(*text)
+        for t in text:
+            self.text += str(t)
+        self.text += "\n"
+
+    def writeToFile(self, path):
+        with open(path, "w") as file:
+            file.write(self.text)
+        print("Results written to '", path, "'.")
 
 
 
 def main():
+    inputPath = Path(input("Path to File: "))
+
+    df = pd.read_excel(str(inputPath))
+    col1 = df[input(" Left column title: ")].tolist()
+    col2 = df[input("Right column title: ")].tolist()
+
     counter = 0
-    df = pd.read_excel('Texte.xlsx')
-    col1 = df["DE"].tolist()
-    col2 = df["FR"].tolist()
+    results = ResultText()
     for i,(cell1, cell2) in enumerate(zip(col1, col2)):
         numbers1 = parseDigitSlices(cell1)
         numbers2 = parseDigitSlices(cell2)
@@ -121,7 +140,12 @@ def main():
 
         if(comp.differencesFound):
             counter += 1
-            print("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
-    print("Found ", counter, " inconsistencys in total")
+            results.append("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
+        
+    results.append()
+    results.append("Found ", counter, " inconsistencys in total.\n")
+    outPath = (inputPath / ".." / f"Inconsistency_results_for_{inputPath.stem}.txt").resolve()
+    results.writeToFile(outPath)
+    input("\nPress any key to end programm...")
 
 main() 
