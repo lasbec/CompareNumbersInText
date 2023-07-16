@@ -69,11 +69,18 @@ class SlicesComparison:
     def __repr__(self):
         if(not self.differencesFound):
             return "No difference found"
-        result = ""
+
+        if(len(self.slicesLeft) == len(self.slicesRight)):
+            result = ""
+            for diffL, diffR in self.differences:
+                result += "Left:  " + str(diffL) + "\n"
+                result += "Right: " + str(diffR) + "\n"
+                result += "\n"
+            return result
         
         (firstDiffLeft, firstDiffRight) = self.differences[0]
 
-        result += "First difference:\n" + str(firstDiffLeft) + "\n" + str(firstDiffRight) + "\n"
+        result = "First difference:\n" + str(firstDiffLeft) + "\n" + str(firstDiffRight) + "\n"
 
         result += "\nLeft misses following elements from right:\n" if len(self.leftMisses) > 0 else ""
         for lm in self.leftMisses:
