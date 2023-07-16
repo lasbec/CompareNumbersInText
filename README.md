@@ -1,5 +1,5 @@
 # What is it for?
-This tool is made to check the numbers in translations of (technical) texts of consistency. So we are expecting the translation to contain the same numbers in the same order, as in the original text. Espacially when using modern AI for translation, like ChatGPT, there can be switched or missing numbers in the translation. 
+This tool is made to check the numbers in translations of (technical) texts for consistency. So we are expecting the translation to contain the same numbers in the same order, as in the original text. Espacially when using modern AI for translation, like ChatGPT, there can be switched or missing numbers in the translation. 
 
 # How to Use
 You need to write a Excel file with titled columns for the two languages.
