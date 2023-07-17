@@ -1,6 +1,7 @@
 import pandas as pd
 from itertools import zip_longest
 from pathlib import Path
+import traceback
 
 
 class StringSlice:
@@ -122,30 +123,39 @@ class ResultText:
         print("Results written to '", path, "'.")
 
 
+        
+        
+        
+    
 
 def main():
-    inputPath = Path(input("Path to File: "))
+    try:
+        inputPath = Path(input("Path to File: "))
+        df = pd.read_excel(str(inputPath))
+        col1 = df[input(" Left column title: ")].tolist()
+        col2 = df[input("Right column title: ")].tolist()
 
-    df = pd.read_excel(str(inputPath))
-    col1 = df[input(" Left column title: ")].tolist()
-    col2 = df[input("Right column title: ")].tolist()
+        results = ResultText()
+        counter = 0
+        for i,(cell1, cell2) in enumerate(zip(col1, col2)):
+            numbers1 = parseDigitSlices(cell1)
+            numbers2 = parseDigitSlices(cell2)
+            
+            comp = SlicesComparison(numbers1, numbers2)
 
-    counter = 0
-    results = ResultText()
-    for i,(cell1, cell2) in enumerate(zip(col1, col2)):
-        numbers1 = parseDigitSlices(cell1)
-        numbers2 = parseDigitSlices(cell2)
-        
-        comp = SlicesComparison(numbers1, numbers2)
-
-        if(comp.differencesFound):
-            counter += 1
-            results.append("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
-        
-    results.append()
-    results.append("Found ", counter, " inconsistencys in total.\n")
-    outPath = (inputPath / ".." / f"Inconsistency_results_for_{inputPath.stem}.txt").resolve()
-    results.writeToFile(outPath)
+            if(comp.differencesFound):
+                counter += 1
+                results.append("Differing numbers found in row ",i+2 ,":\n",comp,"--------------------------------------------\n")
+            
+        results.append()
+        results.append("Found ", counter, " inconsistencys in total.\n")
+        outPath = (inputPath / ".." / f"Inconsistency_results_for_{inputPath.stem}.txt").resolve()
+        results.writeToFile(outPath)
+    except FileNotFoundError:
+        print("File not found at '", inputPath, "'")
+    except Exception as e:
+        print("Unexpected Exception occured:", traceback.format_exc())
     input("\nPress any key to end programm...")
 
-main() 
+
+main()
